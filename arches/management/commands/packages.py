@@ -569,6 +569,7 @@ class Command(BaseCommand):
         dev=False,
         defer_indexing=True,
         is_application=False,
+        refresh_geometries=True,
     ):
         celery_worker_running = task_management.check_if_celery_available()
 
@@ -1009,7 +1010,8 @@ class Command(BaseCommand):
             for css_file in css_files:
                 shutil.copy(css_file, css_dest)
         print("Refreshing the resource view")
-        update_resource_geojson_geometries()
+        if refresh_geometries:
+            update_resource_geojson_geometries()
         print("loading post sql")
         load_sql(package_location, "post_sql")
         print("loading templates")

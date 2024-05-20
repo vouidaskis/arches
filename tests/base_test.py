@@ -26,6 +26,7 @@ from arches.app.models.system_settings import settings
 from arches.app.utils.betterJSONSerializer import JSONSerializer, JSONDeserializer
 from arches.app.utils.data_management.resource_graphs.importer import import_graph as ResourceGraphImporter
 from arches.app.utils.data_management.resources.importer import BusinessDataImporter
+from arches.management.commands.packages import Command as PackagesCommand
 from tests import test_settings
 from arches.app.utils.context_processors import app_settings
 from django.db import connection
@@ -169,3 +170,11 @@ def sync_overridden_test_settings_to_arches():
         yield
     finally:
         settings._wrapped = original_settings_wrapped
+
+
+class PackagesCommandWithoutTruncates(PackagesCommand):
+    """Patch out operations that truncate tables, which cannot be done in
+    transactions, e.g. inside setUpClass()."""
+    def load_package(self, *args, **kwargs):
+        kwargs["refresh_geometries"] = False
+        super().load_package(*args, **kwargs)

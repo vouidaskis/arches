@@ -18,7 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os
 from tests import test_settings
-from tests.base_test import ArchesTestCase
+from tests.base_test import ArchesTestCase, PackagesCommandWithoutTruncates
 from django.core import management
 from django.test.utils import captured_stdout
 from django.urls import reverse
@@ -69,17 +69,18 @@ class CommandLineTests(ArchesTestCase):
 
     @classmethod
     def setUpClass(cls):
+        super().setUpClass()
+
         cls.data_type_graphid = "330802c5-95bd-11e8-b7ac-acde48001122"
         cls.resource_instance_id = "f562c2fa-48d3-4798-a723-10209806c068"
 
         if not GraphModel.objects.filter(pk=cls.data_type_graphid).exists():
-            # TODO: Fix this to run inside transaction, i.e. after super().setUpClass()
-            # https://github.com/archesproject/arches/issues/10719
             test_pkg_path = os.path.join(test_settings.TEST_ROOT, "fixtures", "testing_prj", "testing_prj", "pkg")
             with captured_stdout():
-                management.call_command("packages", operation="load_package", source=test_pkg_path, yes=True, verbosity=0)
+                management.call_command(
+                    PackagesCommandWithoutTruncates(), operation="load_package", source=test_pkg_path, yes=True, verbosity=0
+                )
 
-        super().setUpClass()
         add_users()
 
     def test_resource_instance_permission_assignment(self):
