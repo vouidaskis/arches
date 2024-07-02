@@ -16,7 +16,6 @@ class ArchesAppConfig(AppConfig):
         inject_arches_applications_directories()
 
 
-
 ### GLOBAL DEPRECATIONS ###
 FILE_TYPE_CHECKING_MSG = (
     "Providing boolean values to FILE_TYPE_CHECKING is deprecated. "
