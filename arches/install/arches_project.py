@@ -51,6 +51,7 @@ class ArchesCommand(TemplateCommand):
         options["arches_next_minor_version"] = ".".join(
             [str(arches.VERSION[0]), str(arches.VERSION[1] + 1), "0"]
         )
+        options["project_name_title_case"] = project_name.title()
 
         super(ArchesCommand, self).handle("project", project_name, target, **options)
 
