@@ -362,7 +362,6 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
     "django.contrib.gis",
     "arches",
-    "arches.app",
     "arches.app.models",
     "arches.management",
     "guardian",
